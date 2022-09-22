@@ -14,56 +14,63 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
-app.MapGet("/{vanity}", async (string vanity, HttpResponse response, IAzureTableStorageService service) =>
+app.MapGet("/", async (HttpContext httpContext) =>
+{
+    httpContext.Response.Headers.ContentType = "text/html; charset=UTF-8";
+    await httpContext.Response.SendFileAsync("wwwroot/index.html");
+});
+
+app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IAzureTableStorageService service) =>
 {
     try
     {
         var resultUrl = await service.GetUrlFromVanityAsync(vanity);
 
-        response.StatusCode = 302;
-        response.Redirect(resultUrl);
+        httpContext.Response.StatusCode = 302;
+        httpContext.Response.Redirect(resultUrl);
     }
     catch (RequestFailedException requestFailedException)
     {
-        await HandleRequestFailedException(response, requestFailedException);
+        await HandleRequestFailedException(httpContext.Response, requestFailedException);
     }
 });
 
-app.MapGet("/api/all", async (IAzureTableStorageService service, HttpResponse response) =>
+app.MapGet("/api/urls", async (IAzureTableStorageService service, HttpContext httpContext) =>
 {
     try
     {
         var urls = service.GetAllShortenedUrls();
 
-        response.StatusCode = 200;
-        await response.WriteAsJsonAsync(urls);
+        httpContext.Response.StatusCode = 200;
+        await httpContext.Response.WriteAsJsonAsync(urls);
     }
     catch (RequestFailedException requestFailedException)
     {
-        await HandleRequestFailedException(response, requestFailedException);
+        await HandleRequestFailedException(httpContext.Response, requestFailedException);
     }
 });
 
-app.MapPost("/api/save", async (IAzureTableStorageService service, UrlRequest urlRequest,
-    HttpRequest request, HttpResponse response) =>
+app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService service,
+    HttpContext httpContext) =>
 {
     try
     {
-        ValidateAuthHeader(request);
+        ValidateAuthHeader(httpContext.Request);
 
         await service.SaveUrl(urlRequest);
 
-        response.StatusCode = 204;
+        httpContext.Response.StatusCode = 204;
     }
     catch (RequestFailedException requestFailedException)
     {
-        await HandleRequestFailedException(response, requestFailedException);
+        await HandleRequestFailedException(httpContext.Response, requestFailedException);
     }
     catch (UnauthorizedException unauthorizedException)
     {
-        response.StatusCode = 401;
-        await response.WriteAsJsonAsync(new { message = unauthorizedException.Message });
+        httpContext.Response.StatusCode = 401;
+        await httpContext.Response.WriteAsJsonAsync(new { message = unauthorizedException.Message });
     }
 });
 
@@ -76,8 +83,8 @@ static void AddServices(IServiceCollection services)
 
 void ValidateAuthHeader(HttpRequest request)
 {
-    if (!request.Headers.ContainsKey("Authorization")
-        || request.Headers.Authorization != builder.Configuration["SecurityToken"])
+    if (!request.Headers.ContainsKey(Constants.Authorization)
+        || request.Headers.Authorization != builder.Configuration[Constants.SecurityToken])
     {
         throw new UnauthorizedException();
     }

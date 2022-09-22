@@ -5,11 +5,6 @@ public class AzureTableStorageService : IAzureTableStorageService
     private readonly TableClient _tableClient;
     private readonly TableServiceClient _tableServiceClient;
 
-    const string Url = "url";
-    const string UrlPartitionKey = Url;
-
-    const string Visits = "visits";
-
     public AzureTableStorageService(IConfiguration configuration)
     {
         var azureStorageConnectionString = configuration.GetConnectionString(Constants.AzureStorageConnectionString);
@@ -22,13 +17,15 @@ public class AzureTableStorageService : IAzureTableStorageService
     {
         var urlEntity = await GetUrlEntityByVanity(vanity);
 
-        var urlEntityUrl = urlEntity.GetString(Url);
-        var currentUrlVisits = urlEntity.GetInt32(Visits);
+        var urlEntityName = urlEntity.GetString(Constants.Name);
+        var urlEntityUrl = urlEntity.GetString(Constants.Url);
+        var currentUrlVisits = urlEntity.GetInt32(Constants.Visits);
 
-        var entity = new TableEntity(UrlPartitionKey, vanity)
+        var entity = new TableEntity(Constants.UrlPartitionKey, vanity)
         {
-            { Url, urlEntityUrl },
-            { Visits, currentUrlVisits + 1 }
+            { Constants.Name, urlEntityName },
+            { Constants.Url, urlEntityUrl },
+            { Constants.Visits, currentUrlVisits + 1 }
         };
 
         await _tableClient.UpdateEntityAsync(entity, ETag.All);
@@ -38,16 +35,18 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     public IEnumerable<ShortenedUrl> GetAllShortenedUrls()
     {
-        var tableEntities = _tableClient.Query<TableEntity>(entity => entity.PartitionKey == Url);
+        var tableEntities = _tableClient.Query<TableEntity>(entity => entity.PartitionKey == Constants.Url);
 
         var results = tableEntities.Select(entity => new ShortenedUrl
         {
+            Name = entity.GetString(Constants.Name),
             PartitionKey = entity.PartitionKey,
             Timestamp = entity.Timestamp.Value,
-            Url = entity.GetString(Url),
+            Url = entity.GetString(Constants.Url),
             Vanity = entity.RowKey,
-            Visits = entity.GetInt32(Visits).Value
-        });
+            Visits = entity.GetInt32(Constants.Visits).Value
+        })
+        .OrderBy(url => url.Name);
 
         return results;
     }
@@ -58,10 +57,11 @@ public class AzureTableStorageService : IAzureTableStorageService
         {
             var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
 
-            var entity = new TableEntity(UrlPartitionKey, urlRequest.Vanity)
+            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
-                { Url, urlRequest.Url },
-                { Visits, urlEntity.GetInt32(Visits) }
+                { Constants.Name, urlRequest.Name },
+                { Constants.Url, urlRequest.Url },
+                { Constants.Visits, urlEntity.GetInt32(Constants.Visits) }
             };
 
             await _tableClient.UpdateEntityAsync(entity, ETag.All);
@@ -70,10 +70,11 @@ public class AzureTableStorageService : IAzureTableStorageService
         {
             if (requestFailedException.Status != 404) throw requestFailedException;
 
-            var entity = new TableEntity(UrlPartitionKey, urlRequest.Vanity)
+            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
-                { Url, urlRequest.Url },
-                { Visits, 0 }
+                { Constants.Name, urlRequest.Name },
+                { Constants.Url, urlRequest.Url },
+                { Constants.Visits, 0 }
             };
 
             await _tableClient.AddEntityAsync(entity);
@@ -89,6 +90,6 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     private async Task<TableEntity> GetUrlEntityByVanity(string vanity)
     {
-        return await _tableClient.GetEntityAsync<TableEntity>(UrlPartitionKey, vanity);
+        return await _tableClient.GetEntityAsync<TableEntity>(Constants.UrlPartitionKey, vanity);
     }
 }
