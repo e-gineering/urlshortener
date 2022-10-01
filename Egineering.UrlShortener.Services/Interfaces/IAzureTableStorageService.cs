@@ -4,5 +4,6 @@ public interface IAzureTableStorageService
 {
     Task<string> GetUrlFromVanityAsync(string vanity);
     IEnumerable<ShortenedUrl> GetAllShortenedUrls();
-    Task SaveUrl(UrlRequest urlRequest);
+    Task AddUrl(UrlRequest urlRequest);
+    Task ReplaceUrl(UrlRequest urlRequest);
 }

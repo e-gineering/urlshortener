@@ -1,4 +1,6 @@
-﻿namespace Egineering.UrlShortener.Services;
+﻿using Egineering.UrlShortener.Services.Exceptions;
+
+namespace Egineering.UrlShortener.Services;
 
 public class AzureTableStorageService : IAzureTableStorageService
 {
@@ -51,7 +53,26 @@ public class AzureTableStorageService : IAzureTableStorageService
         return results;
     }
 
-    public async Task SaveUrl(UrlRequest urlRequest)
+    public async Task AddUrl(UrlRequest urlRequest)
+    {
+        var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
+
+        if (urlEntity != null)
+        {
+            throw new ConflictException(urlRequest.Vanity);
+        }
+
+        var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
+        {
+            { Constants.Name, urlRequest.Name },
+            { Constants.Url, urlRequest.Url },
+            { Constants.Visits, 0 }
+        };
+
+        await _tableClient.AddEntityAsync(entity);
+    }
+
+    public async Task ReplaceUrl(UrlRequest urlRequest)
     {
         try
         {
@@ -66,18 +87,12 @@ public class AzureTableStorageService : IAzureTableStorageService
 
             await _tableClient.UpdateEntityAsync(entity, ETag.All);
         }
-        catch (RequestFailedException requestFailedException)
+        catch (RequestFailedException ex)
         {
-            if (requestFailedException.Status != 404) throw requestFailedException;
+            if (ex.ErrorCode == "ResourceNotFound")
+                throw new UrlEntityNotFoundException(urlRequest.Vanity);
 
-            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
-            {
-                { Constants.Name, urlRequest.Name },
-                { Constants.Url, urlRequest.Url },
-                { Constants.Visits, 0 }
-            };
-
-            await _tableClient.AddEntityAsync(entity);
+            throw ex;
         }
     }
 
