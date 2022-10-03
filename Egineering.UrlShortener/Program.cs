@@ -59,7 +59,7 @@ app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService
     {
         ValidateAuthHeader(httpContext.Request);
 
-        await service.SaveUrl(urlRequest);
+        await service.AddUrl(urlRequest);
 
         httpContext.Response.StatusCode = 204;
     }
@@ -71,6 +71,38 @@ app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService
     {
         httpContext.Response.StatusCode = 401;
         await httpContext.Response.WriteAsJsonAsync(new { message = unauthorizedException.Message });
+    }
+    catch (ConflictException conflictException)
+    {
+        httpContext.Response.StatusCode = 409;
+        await httpContext.Response.WriteAsJsonAsync(new { message = conflictException.Message });
+    }
+});
+
+app.MapPut("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService service,
+    HttpContext httpContext) =>
+{
+    try
+    {
+        ValidateAuthHeader(httpContext.Request);
+
+        await service.ReplaceUrl(urlRequest);
+
+        httpContext.Response.StatusCode = 204;
+    }
+    catch (RequestFailedException requestFailedException)
+    {
+        await HandleRequestFailedException(httpContext.Response, requestFailedException);
+    }
+    catch (UnauthorizedException unauthorizedException)
+    {
+        httpContext.Response.StatusCode = 401;
+        await httpContext.Response.WriteAsJsonAsync(new { message = unauthorizedException.Message });
+    }
+    catch (UrlEntityNotFoundException urlEntityNotFoundException)
+    {
+        httpContext.Response.StatusCode = 404;
+        await httpContext.Response.WriteAsJsonAsync(new { message = urlEntityNotFoundException.Message });
     }
 });
 
