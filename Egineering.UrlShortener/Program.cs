@@ -74,11 +74,21 @@ app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService
     }
 });
 
+app.MapGet("api/qr/{url}", (string url, IQRCodeService service) =>
+{
+    var qrCodeBytes = service.GenerateQRCode(url);
+
+    var mimeType = "image/png";
+
+    return Results.File(qrCodeBytes, mimeType, "qr.png");
+});
+
 app.Run();
 
 static void AddServices(IServiceCollection services)
 {
     services.AddSingleton<IAzureTableStorageService, AzureTableStorageService>();
+    services.AddSingleton<IQRCodeService, QRCodeService>();
 }
 
 void ValidateAuthHeader(HttpRequest request)
