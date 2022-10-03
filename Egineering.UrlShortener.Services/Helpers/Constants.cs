@@ -16,4 +16,10 @@ public static class Constants
     public const string Url = "url";
     public const string UrlPartitionKey = Url;
     public const string Visits = "visits";
+    
+    // Azure Request Error Codes
+    public static class AzureRequestErrorCodes
+    {
+        public const string ResourceNotFound = "ResourceNotFound";
+    }
 }

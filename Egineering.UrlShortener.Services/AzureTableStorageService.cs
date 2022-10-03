@@ -89,7 +89,7 @@ public class AzureTableStorageService : IAzureTableStorageService
         }
         catch (RequestFailedException ex)
         {
-            if (ex.ErrorCode == "ResourceNotFound")
+            if (ex.ErrorCode == Constants.AzureRequestErrorCodes.ResourceNotFound)
                 throw new UrlEntityNotFoundException(urlRequest.Vanity);
 
             throw ex;
