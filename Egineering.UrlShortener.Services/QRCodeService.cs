@@ -6,7 +6,14 @@ namespace Egineering.UrlShortener.Services;
 
 public class QRCodeService : IQRCodeService
 {
-    public byte[] GenerateQRCode(string encodedUrl, int hue = 205, int saturation = 31, int lightness = 46)
+    private readonly IConfiguration Configuration;
+
+    public QRCodeService(IConfiguration configuration)
+    {
+        Configuration = configuration;
+    }
+    
+    public byte[] GenerateQRCode(string encodedUrl)
     {
         // url decode the encodedUrl
         var url = Uri.UnescapeDataString(encodedUrl);
@@ -18,6 +25,7 @@ public class QRCodeService : IQRCodeService
         using var surface = SKSurface.Create(info);
         var canvas = surface.Canvas;
 
+        var imagePath = Configuration["QRCodeTheme:ImagePath"];
         var logo = File.ReadAllBytes("wwwroot/images/EG.png");
         var icon = new IconData
         {
@@ -25,6 +33,9 @@ public class QRCodeService : IQRCodeService
             IconSizePercent = 15,
         };
 
+        _ = float.TryParse(Configuration["QRCodeTheme:Color:Hue"], out float hue);
+        _ = float.TryParse(Configuration["QRCodeTheme:Color:Saturation"], out float saturation);
+        _ = float.TryParse(Configuration["QRCodeTheme:Color:Lightness"], out float lightness);
         canvas.Render(qr, info.Width, info.Height, SKColor.Empty, SKColor.FromHsl(hue, saturation, lightness), icon);
 
         using var image = surface.Snapshot();
