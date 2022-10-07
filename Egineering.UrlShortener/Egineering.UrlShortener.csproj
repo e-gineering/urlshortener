@@ -18,4 +18,7 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <Target Name="CopyFilesAfterPublish" AfterTargets="AfterPublish">
+    <Copy SourceFiles="$(TargetDir)runtimes/linux-x64/native/libSkiaSharp.so" DestinationFolder="$([System.IO.Path]::GetFullPath('$(PublishDir)'))/bin/" />
+  </Target>
 </Project>
