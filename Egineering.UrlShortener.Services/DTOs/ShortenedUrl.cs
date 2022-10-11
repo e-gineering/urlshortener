@@ -9,4 +9,5 @@ public class ShortenedUrl
     public string Url { get; set; }
     public string Vanity { get; set; }
     public int Visits { get; set; }
+    public bool IsPublic { get; set; }
 }

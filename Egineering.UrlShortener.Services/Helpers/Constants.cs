@@ -16,6 +16,7 @@ public static class Constants
     public const string Url = "url";
     public const string UrlPartitionKey = Url;
     public const string Visits = "visits";
+    public const string IsPublic = "isPublic";
     
     // Azure Request Error Codes
     public static class AzureRequestErrorCodes
