@@ -37,7 +37,7 @@ public class AzureTableStorageService : IAzureTableStorageService
         return urlEntityUrl;
     }
 
-    public IEnumerable<ShortenedUrl> GetAllShortenedUrls()
+    public IEnumerable<ShortenedUrl> GetAllPublicUrls()
     {
         var tableEntities = _tableClient.Query<TableEntity>(entity => entity.PartitionKey == Constants.Url && entity.GetBoolean(Constants.IsPublic).Value == true);
 
