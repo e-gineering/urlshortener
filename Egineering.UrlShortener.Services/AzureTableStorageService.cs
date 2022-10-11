@@ -22,12 +22,14 @@ public class AzureTableStorageService : IAzureTableStorageService
         var urlEntityName = urlEntity.GetString(Constants.Name);
         var urlEntityUrl = urlEntity.GetString(Constants.Url);
         var currentUrlVisits = urlEntity.GetInt32(Constants.Visits);
+        var isPublic = urlEntity.GetBoolean(Constants.IsPublic);
 
         var entity = new TableEntity(Constants.UrlPartitionKey, vanity)
         {
             { Constants.Name, urlEntityName },
             { Constants.Url, urlEntityUrl },
-            { Constants.Visits, currentUrlVisits + 1 }
+            { Constants.Visits, currentUrlVisits + 1 },
+            { Constants.IsPublic, isPublic }
         };
 
         await _tableClient.UpdateEntityAsync(entity, ETag.All);
@@ -37,7 +39,7 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     public IEnumerable<ShortenedUrl> GetAllShortenedUrls()
     {
-        var tableEntities = _tableClient.Query<TableEntity>(entity => entity.PartitionKey == Constants.Url);
+        var tableEntities = _tableClient.Query<TableEntity>(entity => entity.PartitionKey == Constants.Url && entity.GetBoolean(Constants.IsPublic).Value == true);
 
         var results = tableEntities.Select(entity => new ShortenedUrl
         {
@@ -46,7 +48,8 @@ public class AzureTableStorageService : IAzureTableStorageService
             Timestamp = entity.Timestamp.Value,
             Url = entity.GetString(Constants.Url),
             Vanity = entity.RowKey,
-            Visits = entity.GetInt32(Constants.Visits).Value
+            Visits = entity.GetInt32(Constants.Visits).Value,
+            IsPublic = entity.GetBoolean(Constants.IsPublic).Value
         })
         .OrderBy(url => url.Name);
 
@@ -66,7 +69,8 @@ public class AzureTableStorageService : IAzureTableStorageService
         {
             { Constants.Name, urlRequest.Name },
             { Constants.Url, urlRequest.Url },
-            { Constants.Visits, 0 }
+            { Constants.Visits, 0 },
+            { Constants.IsPublic, urlRequest.IsPublic }
         };
 
         await _tableClient.AddEntityAsync(entity);
@@ -82,7 +86,8 @@ public class AzureTableStorageService : IAzureTableStorageService
             {
                 { Constants.Name, urlRequest.Name },
                 { Constants.Url, urlRequest.Url },
-                { Constants.Visits, urlEntity.GetInt32(Constants.Visits) }
+                { Constants.Visits, urlEntity.GetInt32(Constants.Visits) },
+                { Constants.IsPublic, urlRequest.IsPublic },
             };
 
             await _tableClient.UpdateEntityAsync(entity, ETag.All);
