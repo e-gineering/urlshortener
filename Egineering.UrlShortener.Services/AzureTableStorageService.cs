@@ -19,6 +19,11 @@ public class AzureTableStorageService : IAzureTableStorageService
     {
         var urlEntity = await GetUrlEntityByVanity(vanity);
 
+        if (urlEntity == null)
+        {
+            throw new UrlEntityNotFoundException(vanity);
+        }
+
         var urlEntityName = urlEntity.GetString(Constants.Name);
         var urlEntityUrl = urlEntity.GetString(Constants.Url);
         var currentUrlVisits = urlEntity.GetInt32(Constants.Visits);
@@ -78,9 +83,12 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     public async Task ReplaceUrl(UrlRequest urlRequest)
     {
-        try
+        var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
+        
+        if (urlEntity == null)
         {
-            var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
+            throw new UrlEntityNotFoundException(urlRequest.Vanity);
+        }
 
             var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
@@ -90,15 +98,7 @@ public class AzureTableStorageService : IAzureTableStorageService
                 { Constants.IsPublic, urlRequest.IsPublic },
             };
 
-            await _tableClient.UpdateEntityAsync(entity, ETag.All);
-        }
-        catch (RequestFailedException ex)
-        {
-            if (ex.ErrorCode == Constants.AzureRequestErrorCodes.ResourceNotFound)
-                throw new UrlEntityNotFoundException(urlRequest.Vanity);
-
-            throw ex;
-        }
+        await _tableClient.UpdateEntityAsync(entity, ETag.All);
     }
 
     private TableClient GetUrlTableClient()
@@ -108,8 +108,18 @@ public class AzureTableStorageService : IAzureTableStorageService
         return _tableServiceClient.GetTableClient(Constants.UrlTableName);
     }
 
-    private async Task<TableEntity> GetUrlEntityByVanity(string vanity)
+    private async Task<TableEntity?> GetUrlEntityByVanity(string vanity)
     {
-        return await _tableClient.GetEntityAsync<TableEntity>(Constants.UrlPartitionKey, vanity);
+        TableEntity? tableEntity = null;
+        try
+        {
+            tableEntity = await _tableClient.GetEntityAsync<TableEntity>(Constants.UrlPartitionKey, vanity);
+        }
+        catch (RequestFailedException ex)
+        {
+            if (ex.ErrorCode == Constants.AzureRequestErrorCodes.ResourceNotFound)
+                return null;
+        }
+        return tableEntity;
     }
 }
