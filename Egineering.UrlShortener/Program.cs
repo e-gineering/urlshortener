@@ -41,7 +41,7 @@ app.MapGet("/api/urls", async (IAzureTableStorageService service, HttpContext ht
 {
     try
     {
-        var urls = service.GetAllShortenedUrls();
+        var urls = service.GetAllPublicUrls();
 
         httpContext.Response.StatusCode = 200;
         await httpContext.Response.WriteAsJsonAsync(urls);
