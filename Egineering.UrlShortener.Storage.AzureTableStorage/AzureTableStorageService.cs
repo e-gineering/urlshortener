@@ -1,6 +1,11 @@
-﻿using Egineering.UrlShortener.Services.Exceptions;
-
-namespace Egineering.UrlShortener.Services;
+﻿global using Azure;
+global using Azure.Data.Tables;
+using Egineering.UrlShortener.Storage.AzureTableStorage;
+using Egineering.UrlShortener.Storage.AzureTableStorage.Interfaces;
+using Egineering.UrlShortener.Storage.DTOs;
+using Egineering.UrlShortener.Storage.Exceptions;
+using Microsoft.Extensions.Configuration;
+namespace Egineering.UrlShortener.Services.StorageServices;
 
 public class AzureTableStorageService : IAzureTableStorageService
 {
@@ -49,7 +54,7 @@ public class AzureTableStorageService : IAzureTableStorageService
         var results = tableEntities.Select(entity => new ShortenedUrl
         {
             Name = entity.GetString(Constants.Name),
-            PartitionKey = entity.PartitionKey,
+            //PartitionKey = entity.PartitionKey, //TODO: Remove?
             Timestamp = entity.Timestamp.Value,
             Url = entity.GetString(Constants.Url),
             Vanity = entity.RowKey,
@@ -84,13 +89,13 @@ public class AzureTableStorageService : IAzureTableStorageService
     public async Task ReplaceUrl(UrlRequest urlRequest)
     {
         var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
-        
+
         if (urlEntity == null)
         {
             throw new UrlEntityNotFoundException(urlRequest.Vanity);
         }
 
-            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
+        var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
                 { Constants.Name, urlRequest.Name },
                 { Constants.Url, urlRequest.Url },
@@ -122,4 +127,7 @@ public class AzureTableStorageService : IAzureTableStorageService
         }
         return tableEntity;
     }
+    public static string TypeName => "AzureTableStorage";
+    public bool IsStorageType(string name) => name == TypeName;
+    public string StorageType() => TypeName;
 }

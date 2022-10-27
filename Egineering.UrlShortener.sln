@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Egineering.UrlShortener", "Egineering.UrlShortener\Egineering.UrlShortener.csproj", "{AD04C2A5-7441-4BBC-93C4-309EF3E61E48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Egineering.UrlShortener", "Egineering.UrlShortener\Egineering.UrlShortener.csproj", "{AD04C2A5-7441-4BBC-93C4-309EF3E61E48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Egineering.UrlShortener.Services", "Egineering.UrlShortener.Services\Egineering.UrlShortener.Services.csproj", "{A7220A97-E567-4421-AC91-7BD60ABB5B5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Egineering.UrlShortener.Services", "Egineering.UrlShortener.Services\Egineering.UrlShortener.Services.csproj", "{A7220A97-E567-4421-AC91-7BD60ABB5B5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Egineering.UrlShortener.Storage", "Egineering.UrlShortener.Storage\Egineering.UrlShortener.Storage.csproj", "{FDCB7A2D-933E-41D1-B1AA-D6D65197275C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Egineering.UrlShortener.Storage.AzureTableStorage", "Egineering.UrlShortener.Storage.AzureTableStorage\Egineering.UrlShortener.Storage.AzureTableStorage.csproj", "{4400303B-BA66-4D86-9781-E28B5CB7E5DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{A7220A97-E567-4421-AC91-7BD60ABB5B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7220A97-E567-4421-AC91-7BD60ABB5B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7220A97-E567-4421-AC91-7BD60ABB5B5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDCB7A2D-933E-41D1-B1AA-D6D65197275C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDCB7A2D-933E-41D1-B1AA-D6D65197275C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDCB7A2D-933E-41D1-B1AA-D6D65197275C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDCB7A2D-933E-41D1-B1AA-D6D65197275C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4400303B-BA66-4D86-9781-E28B5CB7E5DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4400303B-BA66-4D86-9781-E28B5CB7E5DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4400303B-BA66-4D86-9781-E28B5CB7E5DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4400303B-BA66-4D86-9781-E28B5CB7E5DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

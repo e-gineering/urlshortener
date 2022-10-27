@@ -1,4 +1,6 @@
-﻿namespace Egineering.UrlShortener.Services.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Egineering.UrlShortener.Storage.Exceptions;
 
 [ExcludeFromCodeCoverage]
 public class UnauthorizedException : Exception

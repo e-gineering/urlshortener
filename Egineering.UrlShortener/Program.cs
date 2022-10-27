@@ -1,9 +1,13 @@
+using Egineering.UrlShortener.Storage.DTOs;
+using Egineering.UrlShortener.Storage.Interfaces;
+using Egineering.UrlShortener.Storage.Exceptions;
+using Microsoft.Extensions.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-AddServices(builder.Services);
+AddServices(builder.Services, builder.Configuration[Constants.StorageType]);
 
 var app = builder.Build();
 
@@ -22,7 +26,7 @@ app.MapGet("/", async (HttpContext httpContext) =>
     await httpContext.Response.SendFileAsync("wwwroot/index.html");
 });
 
-app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IAzureTableStorageService service) =>
+app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IStorageService service) =>
 {
     try
     {
@@ -37,7 +41,7 @@ app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IAzureTab
     }
 });
 
-app.MapGet("/api/urls", async (IAzureTableStorageService service, HttpContext httpContext) =>
+app.MapGet("/api/urls", async (IStorageService service, HttpContext httpContext) =>
 {
     try
     {
@@ -52,7 +56,7 @@ app.MapGet("/api/urls", async (IAzureTableStorageService service, HttpContext ht
     }
 });
 
-app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService service,
+app.MapPost("/api/urls", async (UrlRequest urlRequest, IStorageService service,
     HttpContext httpContext) =>
 {
     try
@@ -79,7 +83,7 @@ app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService
     }
 });
 
-app.MapPut("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService service,
+app.MapPut("/api/urls", async (UrlRequest urlRequest, IStorageService service,
     HttpContext httpContext) =>
 {
     try
@@ -117,9 +121,9 @@ app.MapGet("api/qr/{url}", (string url, IQRCodeService service) =>
 
 app.Run();
 
-static void AddServices(IServiceCollection services)
+static void AddServices(IServiceCollection services, string storageType)
 {
-    services.AddSingleton<IAzureTableStorageService, AzureTableStorageService>();
+    StorageBuilder.ConfigureStorageProvider(services, storageType);
     services.AddSingleton<IQRCodeService, QRCodeService>();
 }
 

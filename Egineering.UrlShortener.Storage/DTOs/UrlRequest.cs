@@ -1,4 +1,6 @@
-﻿namespace Egineering.UrlShortener.Services.DTOs;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Egineering.UrlShortener.Storage.DTOs;
 
 [ExcludeFromCodeCoverage]
 public class UrlRequest

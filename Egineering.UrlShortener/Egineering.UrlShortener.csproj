@@ -12,6 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Egineering.UrlShortener.Services\Egineering.UrlShortener.Services.csproj" />
+    <ProjectReference Include="..\Egineering.UrlShortener.Storage\Egineering.UrlShortener.Storage.csproj" />
+    <ProjectReference Include="..\Egineering.UrlShortener.Storage.AzureTableStorage\Egineering.UrlShortener.Storage.AzureTableStorage.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
