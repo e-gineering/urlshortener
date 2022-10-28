@@ -12,10 +12,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Egineering.UrlShortener.Services\Egineering.UrlShortener.Services.csproj" />
+    <ProjectReference Include="..\Egineering.UrlShortener.Storage\Egineering.UrlShortener.Storage.csproj" />
+    <ProjectReference Include="..\Egineering.UrlShortener.Storage.AzureTableStorage\Egineering.UrlShortener.Storage.AzureTableStorage.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo OutDir: $(OutDir)&#xD;&#xA;&#xD;&#xA;xcopy ..\Egineering.UrlShortener.Storage.AzureTableStorage\$(OutDir) $(OutDir)plugins\Egineering.UrlShortener.Storage.AzureTableStorage /i /s /e /y" />
+  </Target>
 
 </Project>
