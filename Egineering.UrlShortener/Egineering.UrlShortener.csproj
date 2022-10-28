@@ -22,4 +22,8 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="echo OutDir: $(OutDir)&#xD;&#xA;&#xD;&#xA;xcopy ..\Egineering.UrlShortener.Storage.AzureTableStorage\$(OutDir) $(OutDir)plugins\Egineering.UrlShortener.Storage.AzureTableStorage /i /s /e /y" />
+  </Target>
+
 </Project>
