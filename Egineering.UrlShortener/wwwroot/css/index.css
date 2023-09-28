@@ -2,8 +2,72 @@
     font-family: 'Roboto', sans-serif;
 }
 
-body {
-    background-color: #e3e3e3;
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #e3e3e3;
+    }
+
+    .header {
+        background-color: #efeeef;
+    }
+
+    .mdl-card {
+        background-color: #ffffff;
+    }
+
+    .mdl-card__actions.mdl-card--border {
+        border-top: 1px solid rgba(0, 0, 0, .1);
+    }
+
+    .mdl-card__supporting-text {
+        color: #000000;
+    }
+
+    .mdl-card__title {
+        color: #000000;
+    }
+
+    .mdl-card__title-text {
+        color: #000000;
+    }
+
+    .mdl-divider {
+        background-color: rgba(0, 0, 0, 0.12);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #292929;
+    }
+
+    .header {
+        background-color: #171717;
+    }
+
+    .mdl-card {
+        background-color: #171717;
+    }
+
+    .mdl-card__actions.mdl-card--border {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .mdl-card__supporting-text {
+        color: #ffffff;
+    }
+
+    .mdl-card__title {
+        color: #ffffff;
+    }
+
+    .mdl-card__title-text {
+        color: #ffffff;
+    }
+
+    .mdl-divider {
+        background-color: rgba(0, 0, 0, 0.12);
+    }
 }
 
 #cards {
@@ -19,10 +83,6 @@ body {
     color: rgb(33,150,243);
 }
 
-.header {
-    background-color: #efeeef;
-}
-
 .mdl-card {
     border-radius: 12px;
     flex-basis: 30%;
@@ -34,7 +94,6 @@ body {
 }
 
 .mdl-card__supporting-text {
-    color: #000000;
     min-height: 90px;
 }
 
@@ -44,17 +103,14 @@ body {
 }
 
 .mdl-card__title {
-    color: #000000;
     padding: 0 16px 16px 16px;
 }
 
 .mdl-card__title-text {
-    color: #000000;
     font-weight: 400;
 }
 
 .mdl-divider {
-    background-color: rgba(0, 0, 0, 0.12);
     border: none;
     flex-shrink: 0;
     height: 1px;
