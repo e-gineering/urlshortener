@@ -78,3 +78,37 @@ body {
 .visits {
     display: none;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #292929;
+    }
+
+    .header {
+        background-color: #171717;
+    }
+
+    .mdl-card {
+        background-color: #171717;
+    }
+
+    .mdl-card__actions.mdl-card--border {
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .mdl-card__supporting-text {
+        color: #ffffff;
+    }
+
+    .mdl-card__title {
+        color: #ffffff;
+    }
+
+    .mdl-card__title-text {
+        color: #ffffff;
+    }
+
+    .mdl-divider {
+        background-color: rgba(0, 0, 0, 0.12);
+    }
+}
