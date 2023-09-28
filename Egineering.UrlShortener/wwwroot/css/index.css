@@ -2,6 +2,83 @@
     font-family: 'Roboto', sans-serif;
 }
 
+body {
+    background-color: #e3e3e3;
+}
+
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card-title-with-icon {
+    margin-left: 8px;
+}
+
+.eg-icon {
+    color: rgb(33,150,243);
+}
+
+.header {
+    background-color: #efeeef;
+}
+
+.mdl-card {
+    border-radius: 12px;
+    flex-basis: 30%;
+    flex-grow: 0;
+    margin: 16px;
+    max-width: 30%;
+    padding: 16px;
+    width: 500px;
+}
+
+.mdl-card__supporting-text {
+    color: #000000;
+    min-height: 90px;
+}
+
+.mdl-card__supporting-text a,
+.mdl-card__supporting-text div {
+    padding: 16px 8px;
+}
+
+.mdl-card__title {
+    color: #000000;
+    padding: 0 16px 16px 16px;
+}
+
+.mdl-card__title-text {
+    color: #000000;
+    font-weight: 400;
+}
+
+.mdl-divider {
+    background-color: rgba(0, 0, 0, 0.12);
+    border: none;
+    flex-shrink: 0;
+    height: 1px;
+    margin: 0 16px;
+    padding: 0;
+}
+
+.title {
+    color: rgb(33,150,243);
+    font-weight: 500;
+    margin: 0;
+    padding: 24px;
+    text-align: center;
+}
+
+.vanity {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.visits {
+    display: none;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #292929;
@@ -34,69 +111,4 @@
     .mdl-divider {
         background-color: rgba(0, 0, 0, 0.12);
     }
-}
-
-#cards {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.card-title-with-icon {
-    margin-left: 8px;
-}
-
-.eg-icon {
-    color: rgb(33,150,243);
-}
-
-.mdl-card {
-    border-radius: 12px;
-    flex-basis: 30%;
-    flex-grow: 0;
-    margin: 16px;
-    max-width: 30%;
-    padding: 16px;
-    width: 500px;
-}
-
-.mdl-card__supporting-text {
-    min-height: 90px;
-}
-
-.mdl-card__supporting-text a,
-.mdl-card__supporting-text div {
-    padding: 16px 8px;
-}
-
-.mdl-card__title {
-    padding: 0 16px 16px 16px;
-}
-
-.mdl-card__title-text {
-    font-weight: 400;
-}
-
-.mdl-divider {
-    border: none;
-    flex-shrink: 0;
-    height: 1px;
-    margin: 0 16px;
-    padding: 0;
-}
-
-.title {
-    color: rgb(33,150,243);
-    font-weight: 500;
-    margin: 0;
-    padding: 24px;
-    text-align: center;
-}
-
-.vanity {
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.visits {
-    display: none;
 }
