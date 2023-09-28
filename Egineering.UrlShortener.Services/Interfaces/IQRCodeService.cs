@@ -2,5 +2,5 @@
 
 public interface IQRCodeService
 {
-    byte[] GenerateQRCode(string encodedUrl);
+    byte[] GenerateQRCode(string url);
 }

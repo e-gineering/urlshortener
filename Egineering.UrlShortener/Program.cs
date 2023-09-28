@@ -1,3 +1,5 @@
+using Egineering.UrlShortener.DTOs.Request;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -108,11 +110,12 @@ app.MapPut("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService 
 
 app.MapGet("api/qr/{url}", (string url, IQRCodeService service) =>
 {
-    var qrCodeBytes = service.GenerateQRCode(url);
+    return GenerateQRCode(url, service);
+});
 
-    var mimeType = "image/png";
-
-    return Results.File(qrCodeBytes, mimeType, "qr.png");
+app.MapPost("api/qr", (QRCodeGenerationRequest request, IQRCodeService service) =>
+{
+    return GenerateQRCode(request.Url, service);
 });
 
 app.Run();
@@ -139,4 +142,13 @@ static async Task HandleRequestFailedException(HttpResponse response, RequestFai
     var message = exception.Message.Split("\n").First();
 
     await response.WriteAsJsonAsync(new { message });
+}
+
+IResult GenerateQRCode(string url, IQRCodeService service)
+{
+    var qrCodeBytes = service.GenerateQRCode(url);
+
+    var mimeType = "image/png";
+
+    return Results.File(qrCodeBytes, mimeType, "qr.png");
 }

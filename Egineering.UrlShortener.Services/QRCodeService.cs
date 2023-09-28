@@ -12,14 +12,20 @@ public class QRCodeService : IQRCodeService
     {
         Configuration = configuration;
     }
-    
-    public byte[] GenerateQRCode(string encodedUrl)
+
+    public byte[] GenerateQRCode(string url)
     {
-        // url decode the encodedUrl
-        var url = Uri.UnescapeDataString(encodedUrl);
+        var finalUrl = url;
+
+        try
+        {
+            var decodedUrl = Convert.FromBase64String(url);
+            finalUrl = System.Text.Encoding.UTF8.GetString(decodedUrl);
+        }
+        catch (FormatException) { }
 
         using var generator = new QRCodeGenerator();
-        var qr = generator.CreateQrCode(url, ECCLevel.L, quietZoneSize: 1);
+        var qr = generator.CreateQrCode(finalUrl, ECCLevel.L, quietZoneSize: 1);
 
         var info = new SKImageInfo(512, 512);
         using var surface = SKSurface.Create(info);
