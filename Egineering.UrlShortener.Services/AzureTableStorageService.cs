@@ -84,19 +84,31 @@ public class AzureTableStorageService : IAzureTableStorageService
     public async Task ReplaceUrl(UrlRequest urlRequest)
     {
         var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
-        
+
         if (urlEntity == null)
         {
             throw new UrlEntityNotFoundException(urlRequest.Vanity);
         }
 
-            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
+        var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
                 { Constants.Name, urlRequest.Name },
                 { Constants.Url, urlRequest.Url },
                 { Constants.Visits, urlEntity.GetInt32(Constants.Visits) },
                 { Constants.IsPublic, urlRequest.IsPublic },
             };
+
+        await _tableClient.UpdateEntityAsync(entity, ETag.All);
+    }
+
+    public async Task TogglePublic(string vanity)
+    {
+        var entity = await GetUrlEntityByVanity(vanity)
+            ?? throw new UrlEntityNotFoundException(vanity);
+
+        var isPublic = entity.GetBoolean(Constants.IsPublic) ?? false;
+
+        entity[Constants.IsPublic] = !isPublic;
 
         await _tableClient.UpdateEntityAsync(entity, ETag.All);
     }
