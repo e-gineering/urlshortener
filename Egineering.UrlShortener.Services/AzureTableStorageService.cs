@@ -61,13 +61,23 @@ public class AzureTableStorageService : IAzureTableStorageService
         return results;
     }
 
-    public async Task AddUrl(UrlRequest urlRequest)
+    public async Task<string> AddUrl(UrlRequest urlRequest)
     {
-        var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
-
-        if (urlEntity != null)
+        if (string.IsNullOrWhiteSpace(urlRequest.Vanity))
         {
-            throw new ConflictException(urlRequest.Vanity);
+            // User did not provide a vanity; generate a random one
+            urlRequest.Vanity = await GenerateVanityAsync();
+            // Randomly generated urls are not publicly displayed
+            urlRequest.IsPublic = false;
+        }
+        else
+        {
+            var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
+
+            if (urlEntity != null)
+            {
+                throw new ConflictException(urlRequest.Vanity);
+            }
         }
 
         var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
@@ -79,18 +89,38 @@ public class AzureTableStorageService : IAzureTableStorageService
         };
 
         await _tableClient.AddEntityAsync(entity);
+
+        return urlRequest.Vanity;
+    }
+
+    private async Task<string> GenerateVanityAsync()
+    {
+        var rng = new Random();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        string vanity = string.Empty;
+        TableEntity? urlEntity = null;
+        do
+        {
+            vanity = new string(Enumerable.Repeat(chars, 6)
+                .Select(s => s[rng.Next(s.Length)]).ToArray());
+
+            urlEntity = await GetUrlEntityByVanity(vanity);
+        }
+        while (urlEntity != null);
+
+        return vanity;
     }
 
     public async Task ReplaceUrl(UrlRequest urlRequest)
     {
         var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
-        
+
         if (urlEntity == null)
         {
             throw new UrlEntityNotFoundException(urlRequest.Vanity);
         }
 
-            var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
+        var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
             {
                 { Constants.Name, urlRequest.Name },
                 { Constants.Url, urlRequest.Url },
