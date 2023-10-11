@@ -17,13 +17,8 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     public async Task<string> GetUrlFromVanityAsync(string vanity)
     {
-        var urlEntity = await GetUrlEntityByVanity(vanity);
-
-        if (urlEntity == null)
-        {
-            throw new UrlEntityNotFoundException(vanity);
-        }
-
+        var urlEntity = await GetUrlEntityByVanity(vanity)
+            ?? throw new UrlEntityNotFoundException(vanity);
         var urlEntityName = urlEntity.GetString(Constants.Name);
         var urlEntityUrl = urlEntity.GetString(Constants.Url);
         var currentUrlVisits = urlEntity.GetInt32(Constants.Visits);
@@ -113,20 +108,16 @@ public class AzureTableStorageService : IAzureTableStorageService
 
     public async Task ReplaceUrl(UrlRequest urlRequest)
     {
-        var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity);
-
-        if (urlEntity == null)
-        {
-            throw new UrlEntityNotFoundException(urlRequest.Vanity);
-        }
+        var urlEntity = await GetUrlEntityByVanity(urlRequest.Vanity)
+            ?? throw new UrlEntityNotFoundException(urlRequest.Vanity);
 
         var entity = new TableEntity(Constants.UrlPartitionKey, urlRequest.Vanity)
-            {
-                { Constants.Name, urlRequest.Name },
-                { Constants.Url, urlRequest.Url },
-                { Constants.Visits, urlEntity.GetInt32(Constants.Visits) },
-                { Constants.IsPublic, urlRequest.IsPublic },
-            };
+        {
+            { Constants.Name, urlRequest.Name },
+            { Constants.Url, urlRequest.Url },
+            { Constants.Visits, urlEntity.GetInt32(Constants.Visits) },
+            { Constants.IsPublic, urlRequest.IsPublic },
+        };
 
         await _tableClient.UpdateEntityAsync(entity, ETag.All);
     }
