@@ -122,6 +122,18 @@ public class AzureTableStorageService : IAzureTableStorageService
         await _tableClient.UpdateEntityAsync(entity, ETag.All);
     }
 
+    public async Task TogglePublic(string vanity)
+    {
+        var entity = await GetUrlEntityByVanity(vanity)
+            ?? throw new UrlEntityNotFoundException(vanity);
+
+        var isPublic = entity.GetBoolean(Constants.IsPublic) ?? false;
+
+        entity[Constants.IsPublic] = !isPublic;
+
+        await _tableClient.UpdateEntityAsync(entity, ETag.All);
+    }
+
     private TableClient GetUrlTableClient()
     {
         _tableServiceClient.CreateTableIfNotExists(Constants.UrlTableName);

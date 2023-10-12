@@ -110,6 +110,33 @@ app.MapPut("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService 
     }
 });
 
+app.MapPatch("api/{vanity}/toggle-public", async (string vanity, IAzureTableStorageService service,
+       HttpContext httpContext) =>
+{
+    try
+    {
+        ValidateAuthHeader(httpContext.Request);
+
+        await service.TogglePublic(vanity);
+
+        httpContext.Response.StatusCode = 204;
+    }
+    catch (RequestFailedException requestFailedException)
+    {
+        await HandleRequestFailedException(httpContext.Response, requestFailedException);
+    }
+    catch (UnauthorizedException unauthorizedException)
+    {
+        httpContext.Response.StatusCode = 401;
+        await httpContext.Response.WriteAsJsonAsync(new { message = unauthorizedException.Message });
+    }
+    catch (UrlEntityNotFoundException urlEntityNotFoundException)
+    {
+        httpContext.Response.StatusCode = 404;
+        await httpContext.Response.WriteAsJsonAsync(new { message = urlEntityNotFoundException.Message });
+    }
+});
+
 app.MapGet("api/qr/{url}", (string url, IQRCodeService service) =>
 {
     return GenerateQRCode(url, service);

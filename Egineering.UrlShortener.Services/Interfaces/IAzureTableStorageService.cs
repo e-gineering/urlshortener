@@ -6,4 +6,5 @@ public interface IAzureTableStorageService
     IEnumerable<ShortenedUrl> GetAllPublicUrls();
     Task<string> AddUrl(UrlRequest urlRequest);
     Task ReplaceUrl(UrlRequest urlRequest);
+    Task TogglePublic(string vanity);
 }
