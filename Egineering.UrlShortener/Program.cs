@@ -108,7 +108,7 @@ app.MapPut("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService 
     }
 });
 
-app.MapPatch("api/{vanity}/togglepublic", async (string vanity, IAzureTableStorageService service,
+app.MapPatch("api/{vanity}/toggle-public", async (string vanity, IAzureTableStorageService service,
        HttpContext httpContext) =>
 {
     try
