@@ -61,9 +61,11 @@ app.MapPost("/api/urls", async (UrlRequest urlRequest, IAzureTableStorageService
     {
         ValidateAuthHeader(httpContext.Request);
 
-        await service.AddUrl(urlRequest);
+        var vanity = await service.AddUrl(urlRequest);
 
-        httpContext.Response.StatusCode = 204;
+        httpContext.Response.StatusCode = 201;
+        var shortenedUrl = $"{httpContext.Request.Scheme}://{httpContext.Request.Host}/{vanity}";
+        await httpContext.Response.WriteAsJsonAsync(new { shortenedUrl });
     }
     catch (RequestFailedException requestFailedException)
     {
