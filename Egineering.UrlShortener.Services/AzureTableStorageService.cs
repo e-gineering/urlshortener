@@ -1,4 +1,6 @@
-﻿namespace Egineering.UrlShortener.Services;
+﻿using Egineering.UrlShortener.Services.Exceptions;
+
+namespace Egineering.UrlShortener.Services;
 
 public class AzureTableStorageService : IAzureTableStorageService
 {
