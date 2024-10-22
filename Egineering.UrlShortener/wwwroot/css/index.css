@@ -79,6 +79,28 @@ body {
     display: none;
 }
 
+.qr-code {
+    display: none;
+    margin-top: 10px;
+    width: 250px;
+    height: 250px;
+}
+
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.mdl-card {
+    display: flex;
+    flex-direction: column;
+    margin: 16px;
+    width: 30%;
+    box-sizing: border-box;
+    align-self: flex-start;
+}
+
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #292929;
