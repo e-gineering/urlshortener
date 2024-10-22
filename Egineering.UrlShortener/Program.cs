@@ -24,6 +24,12 @@ app.MapGet("/", async (HttpContext httpContext) =>
     await httpContext.Response.SendFileAsync("wwwroot/index.html");
 });
 
+app.MapGet("/setup", async (HttpContext httpContext) =>
+{
+    httpContext.Response.Headers.ContentType = "text/html; charset=UTF-8";
+    await httpContext.Response.SendFileAsync("wwwroot/setup.html");
+});
+
 app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IAzureTableStorageService service) =>
 {
     try
