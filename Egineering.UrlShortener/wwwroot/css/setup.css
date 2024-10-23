@@ -40,3 +40,40 @@ h1 {
     text-align: center;
     font-weight: bold;
 }
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #292929;
+        color: #ffffff;
+    }
+
+    .setup-form {
+        background-color: #171717;
+        box-shadow: 0 2px 4px rgba(255,255,255,0.1);
+    }
+
+    h1 {
+        color: rgb(33,150,243);
+    }
+
+    .mdl-textfield__input {
+        color: #ffffff;
+    }
+
+    .mdl-textfield__label {
+        color: rgba(255,255,255,0.7);
+    }
+
+    .mdl-button {
+        color: #ffffff;
+    }
+
+    .mdl-textfield__input {
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
+    .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
+        color: rgb(33,150,243);
+    }
+}
