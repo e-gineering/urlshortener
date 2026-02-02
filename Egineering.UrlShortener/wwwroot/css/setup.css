@@ -25,12 +25,12 @@ h1 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.mdl-textfield {
+.mdc-text-field {
     width: 100%;
     margin-bottom: 20px;
 }
 
-.mdl-button {
+.mdc-button {
     display: block;
     margin: 0 auto;
 }
@@ -56,24 +56,15 @@ h1 {
         color: rgb(33,150,243);
     }
 
-    .mdl-textfield__input {
+    .mdc-text-field {
+        --mdc-theme-primary: rgb(33,150,243);
+        --mdc-text-field-ink-color: #ffffff;
+        --mdc-text-field-label-ink-color: rgba(255,255,255,0.7);
+        --mdc-text-field-fill-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .mdc-button {
+        --mdc-theme-primary: rgb(33,150,243);
         color: #ffffff;
-    }
-
-    .mdl-textfield__label {
-        color: rgba(255,255,255,0.7);
-    }
-
-    .mdl-button {
-        color: #ffffff;
-    }
-
-    .mdl-textfield__input {
-        border-bottom: 1px solid rgba(255,255,255,0.12);
-    }
-
-    .mdl-textfield--floating-label.is-focused .mdl-textfield__label,
-    .mdl-textfield--floating-label.is-dirty .mdl-textfield__label {
-        color: rgb(33,150,243);
     }
 }

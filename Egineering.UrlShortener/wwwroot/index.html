@@ -8,25 +8,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-orange.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="/css/index.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="header mdl-shadow--2dp">
+    <div class="header mdc-elevation--z2">
         <h1 class="title">E-g Url Shortener</h1>
     </div>
 
     <div id="cards"></div>
 
     <template id="url-card">
-        <div class="mdl-card mdl-shadow--2dp">
-            <div class="mdl-card__title">
+        <div class="mdc-card mdc-card--outlined">
+            <div class="card-header">
                 <i class="eg-icon material-icons">link</i>
-                <h2 class="name card-title-with-icon mdl-card__title-text"></h2>
+                <h2 class="name card-title-with-icon"></h2>
             </div>
-            <div class="mdl-card__supporting-text">
+            <div class="card-content">
                 <a class="vanity" href=""></a>
                 <div class="url-container">
                     <strong>Destination: </strong> <span class="url"></span>
@@ -34,15 +34,19 @@
                 <div class="visits"></div>
                 <div hidden class="visits"></div>
             </div>
-            <div class="mdl-card__actions mdl-card--border">
-                <a data-url="" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect copy-short-url-button" onclick="copyUrl(this);">
-                    Copy Short URL
-                </a>
-                <a data-url="" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect qr-code-button" onclick="toggleQRCode(this);">
-                    QR Code
-                </a>
-                <img class="qr-code" src="" alt="QR Code" style="display: none;">
+            <div class="mdc-card__actions">
+                <div class="mdc-card__action-buttons">
+                    <button data-url="" class="mdc-button mdc-card__action mdc-card__action--button copy-short-url-button" onclick="copyUrl(this);">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">Copy Short URL</span>
+                    </button>
+                    <button data-url="" class="mdc-button mdc-card__action mdc-card__action--button qr-code-button" onclick="toggleQRCode(this);">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">QR Code</span>
+                    </button>
+                </div>
             </div>
+            <img class="qr-code" src="" alt="QR Code" style="display: none;">
         </div>
     </template>
 

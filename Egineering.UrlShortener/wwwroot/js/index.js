@@ -9,7 +9,7 @@ function copyUrl(element) {
 }
 
 function toggleQRCode(element) {
-    const card = element.closest('.mdl-card');
+    const card = element.closest('.mdc-card');
     const qrCodeImage = card.querySelector('.qr-code');
 
     if (qrCodeImage.style.display === 'block') {
@@ -51,6 +51,12 @@ function renderCards(data) {
         addQRCodeElement(card);
 
         cardsDiv.appendChild(card);
+
+        // Initialize MDC Ripple on buttons
+        const buttons = card.querySelectorAll('.mdc-button');
+        buttons.forEach(button => {
+            mdc.ripple.MDCRipple.attachTo(button);
+        });
     });
 }
 
@@ -60,5 +66,5 @@ function addQRCodeElement(card) {
     qrCodeImage.src = '';
     qrCodeImage.alt = 'QR Code';
     qrCodeImage.style.display = 'none';
-    card.querySelector('.mdl-card__supporting-text').appendChild(qrCodeImage);
+    card.querySelector('.card-content').appendChild(qrCodeImage);
 }
