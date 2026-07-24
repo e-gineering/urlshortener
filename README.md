@@ -2,6 +2,8 @@
 
 A .NET 8 web application for shortening URLs with QR code generation capabilities, built with ASP.NET Core and Azure Table Storage.
 
+See AGENTS.md for guidance on working with AI coding agents in this repository.
+
 ## Prerequisites
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
