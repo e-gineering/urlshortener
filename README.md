@@ -1,12 +1,12 @@
 # URL Shortener
 
-A .NET 8 web application for shortening URLs with QR code generation capabilities, built with ASP.NET Core and Azure Table Storage.
+A .NET 10 web application for shortening URLs with QR code generation capabilities, built with ASP.NET Core and Azure Table Storage.
 
 See AGENTS.md for guidance on working with AI coding agents in this repository.
 
 ## Prerequisites
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - Azure Storage Account (for storing URL mappings)
 - Optional: Visual Studio 2022 or VS Code with C# extensions
 
@@ -71,7 +71,8 @@ The application will start at:
 
 - **Main Page**: `http://localhost:8080/` - View all shortened URLs
 - **Setup Page**: `http://localhost:8080/setup` - Configure security key
-- **Swagger UI**: `http://localhost:8080/swagger` (Development mode only)
+- **Scalar API reference**: `http://localhost:8080/scalar` (Development mode only)
+- **OpenAPI document**: `http://localhost:8080/openapi/v1.json` (Development mode only)
 
 ## API Usage
 
@@ -91,7 +92,7 @@ curl https://yoururl.com/api/qr -k -X POST -d '{"url":"d3d3LmUtZ2luZWVyaW5nLmNvb
 
 ## Technology Stack
 
-- **.NET 8** - Runtime and framework
+- **.NET 10** - Runtime and framework
 - **ASP.NET Core** - Web framework
 - **Azure Table Storage** - URL mapping storage
 - **Material Components for the Web** - UI components

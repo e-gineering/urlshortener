@@ -5,10 +5,12 @@ Guidance for AI coding agents working in this repository.
 ## Style rules
 
 - Do not use unicode characters such as em dashes, en dashes, or the ellipsis character. Use a plain hyphen or spell things out instead.
+- Use plain, literal language. Do not use idioms or figurative expressions (for example "bikeshed", "low-hanging fruit", "bitten you before").
+- Do not use clever language. Always be clear.
 
 ## Project overview
 
-.NET 8 minimal API URL shortener with QR code generation, backed by Azure Table Storage. See README.md for setup and running instructions.
+.NET 10 minimal API URL shortener with QR code generation, backed by Azure Table Storage. See README.md for setup and running instructions.
 
 ## Structure
 
