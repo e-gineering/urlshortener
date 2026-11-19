@@ -1,9 +1,9 @@
 using Egineering.UrlShortener.DTOs.Request;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
 
@@ -13,25 +13,16 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseCors();
 
-app.MapGet("/", async (HttpContext httpContext) =>
-{
-    httpContext.Response.Headers.ContentType = "text/html; charset=UTF-8";
-    await httpContext.Response.SendFileAsync("wwwroot/index.html");
-});
-
-app.MapGet("/setup", async (HttpContext httpContext) =>
-{
-    httpContext.Response.Headers.ContentType = "text/html; charset=UTF-8";
-    await httpContext.Response.SendFileAsync("wwwroot/setup.html");
-});
+app.MapGet("/", async (HttpContext httpContext) => { await ProcessHtmlRequest(httpContext, "index.html"); });
+app.MapGet("/setup", async (HttpContext httpContext) => { await ProcessHtmlRequest(httpContext, "setup.html"); });
 
 app.MapGet("/{vanity}", async (string vanity, HttpContext httpContext, IAzureTableStorageService service) =>
 {
@@ -157,6 +148,13 @@ app.MapPost("api/qr", (QRCodeGenerationRequest request, IQRCodeService service) 
 });
 
 app.Run();
+return;
+
+async Task ProcessHtmlRequest(HttpContext context, string page)
+{
+    context.Response.Headers.ContentType = "text/html; charset=UTF-8";
+    await context.Response.SendFileAsync($"wwwroot/{page}");
+}
 
 static void AddServices(IServiceCollection services)
 {
