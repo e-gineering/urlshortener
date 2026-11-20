@@ -18,8 +18,16 @@ function toggleQRCode(element) {
     }
 
     const shortUrl = element.dataset.url;
-    fetch(`/api/qr/${encodeURIComponent(shortUrl)}`)
-        .then(response => response.blob())
+    // POST instead of GET /api/qr/{url}: App Service decodes %2F in the path, so a URL with slashes does not match the route.
+    fetch('/api/qr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: btoa(shortUrl) })
+    })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            return response.blob();
+        })
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             qrCodeImage.src = url;
