@@ -11,7 +11,11 @@ public class AzureTableStorageService : IAzureTableStorageService
     {
         var azureStorageConnectionString = configuration.GetConnectionString(Constants.AzureStorageConnectionString);
 
-        _tableServiceClient = new TableServiceClient(azureStorageConnectionString);
+        // In Azure the setting is the table endpoint URL, and the app signs in with its managed identity.
+        // Locally the setting is a connection string, such as UseDevelopmentStorage=true for Azurite.
+        _tableServiceClient = Uri.TryCreate(azureStorageConnectionString, UriKind.Absolute, out var endpoint)
+            ? new TableServiceClient(endpoint, new DefaultAzureCredential())
+            : new TableServiceClient(azureStorageConnectionString);
         _tableClient = GetUrlTableClient();
     }
 
